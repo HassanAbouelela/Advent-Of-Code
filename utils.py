@@ -28,9 +28,9 @@ class PerformanceUtils:
         pass
 
     @staticmethod
-    def time_checker(func, runs: int = 10000, *args, **kwargs):
+    def time_checker(func, runs: int = 10000, *args, **kwargs) -> [int, int]:
         """
-        Returns the time needed to run a function 'runs' times. -> int
+        Returns the time needed to run a function 'runs' times.
 
         Parameters:
             func (function): The function to be tested
@@ -85,26 +85,39 @@ class DataMethods:
             pass
 
         @staticmethod
-        def __multi_term_split(string: str, *args, cleanup: bool = False):
+        def multi_term_split(string: str, *args: any, cleanup: bool = True) -> list:
             """
-            Separates a string into a list based on the given inputs
+            Separates a string into a list based on the given args.
 
             Parameters:
                 string (str): The string to be separated
-                args (args): Terms to split the string
+                args (any): Terms to split the string
                 cleanup (bool): (Optional) If results should be automatically cleaned
-                               Defaults to False
+                               Defaults to True
 
             Returns:
                 separated (list): A list of the string separated at the args
             """
-            separated = []
+
+            separated = string
+            try:
+                separated = separated.split(args[0])
+            except ValueError:
+                return separated
+            except IndexError:
+                return ["Index Error: No arguments given"]
+            if len(args) <= 1:
+                return separated
+
             for term in args:
-                try:
-                    split_string = string.split(term)
-                    separated.extend(split_string)
-                except ValueError:
-                    pass
+                temp = []
+                for item in separated:
+                    try:
+                        temp.extend(item.split(term))
+                    except ValueError:
+                        pass
+                separated = temp.copy()
+
             if cleanup:
                 new_separated = []
                 for term in separated:
@@ -120,7 +133,7 @@ class DataMethods:
             pass
 
         @staticmethod
-        def update_dict(dictionary: dict, key: any, value: any):
+        def update_dict(dictionary: dict, key: any, value: any) -> None:
             """
             Non-destructive dict.update. dictionary[key] is updated to a list
             containing former value and new value.
@@ -145,7 +158,7 @@ class DataMethods:
                 dictionary[key] = value
 
         @staticmethod
-        def tracker_dict(dictionary: dict, key: any, add: int = 1):
+        def tracker_dict(dictionary: dict, key: any, add: int = 1) -> None:
             """
             Iterates a value for a given key.
 
